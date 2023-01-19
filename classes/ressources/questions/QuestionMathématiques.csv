@@ -1,0 +1,12 @@
+Question;Carte;NombreDeRéponses;NombreDeBonneRéponses;reponse1;reponse2;reponse3
+Quel est le résultat de 160 + 14?;/cartes/maths/carte-addition;3;1;174;304;173
+Pose 145 - 32. Quel est le résultat?;/cartes/maths/carte-soustraction;3;1;113;177;112
+8 x 7 = ?;/cartes/maths/carte-multiplication;3;1;56;64;48
+Un angle droit est ?;/cartes/maths/carte-angledroit;3;1;égale à 90°;> 90°;< 90°
+Un angle obtus est ?;/cartes/maths/carte-angleobtus;3;1;> 90°;égale à 90°;< 90°
+Un angle plat est ?;/cartes/maths/carte-angleplat;3;1;égale à 180°;< 180°;> 180°
+Pose 65 : 5. Quel est le quotient de cette division?;/cartes/maths/carte-division;3;1;65;13;5
+Aire carré = ?;/cartes/maths/carte-perimetrecarre;3;1;côté x côté;côté + côté;4 x côté
+Perimètre carré = ?;/cartes/maths/carte-perimetrecarre;3;1;4 x côté;côté + côté;côté x côté
+Quel est le périmètre d'un rectangle qui fait 25cm de longueur et 12 cm de largeur?;/cartes/maths/carte-perimetrerectangle;3;1;300 cm;74 cm;74 cm²
+A quoi est égal 58 m?;/cartes/maths/carte-unite;3;1;5,8 dam;58 dm;0,058 hm 

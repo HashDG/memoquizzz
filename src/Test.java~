@@ -1,0 +1,263 @@
+class Test extends Program {
+	void algorithm() {
+		String s = "\n";
+		byte[] b = s.getBytes();
+		byte[] b2 = strToBytes(s);
+		
+		printBytes(md5(b2));
+		printHex(md5(b2));
+		
+		println(toHex(md5(b2)));
+	}
+	
+	void printBytes(byte[] ba){
+		for (byte b : ba) {
+			print((b & 0xff) + " ");
+		}
+		println();
+	}
+	
+	void printHex(byte[] ba) {
+		for (byte b : ba) {
+			print(String.format("%02x", (b & 0xff)) + " ");
+		}
+		println();
+	}
+	
+	String toHex(byte[] ba) {
+		String s = "";
+		for (byte b: ba) {
+			s+=String.format("%02x", b);
+		}
+		return s;
+	}
+
+	int rotateRight(int x, int n) {
+		return ((x >>> n) | (x << (32-n)));
+	}
+	
+	int rotateLeft(int x, int n) {
+		return ((x << n) | (x >>> (32-n)));
+	}
+	
+	byte[] intToByteArray(int value) {
+    	return new byte[] {(byte)value, (byte)(value >>> 8), (byte)(value >>> 16), (byte)(value >>> 24)};
+	}
+	
+	byte[] longToByteArray(long value) {
+		return new byte[] {(byte)value, (byte)(value >>> 8), (byte)(value >>> 16), (byte)(value >>> 24), (byte)(value>>>32), (byte)(value>>>40), (byte)(value>>>48), (byte)(value>>>56)};
+	}
+	
+	long concat(long v, byte b) {
+		return ((v << 8) | b);
+	}
+	
+	byte[] longArrayToByteArray(long[] la) {
+		byte[] r = new byte[length(la)*64];
+		int idx = 0, jdx;
+		for (long l : la) {
+			byte[] lba = longToByteArray(l);
+			jdx = 0;
+			while (jdx < length(lba)) {
+				r[idx++] = lba[jdx++];
+			}
+		}
+		return r;
+	}	
+
+	String toString(byte[] ba) {
+		String s = "";
+		int idx = 0;
+		
+		while (idx < length(ba)) {
+			int c = ba[idx++] & 0xff;
+			if (c <= 0x7f) {
+				s += (char) c;
+			} else if ((c & 0xe0) == 0xc0) {
+				int c2 = ba[idx++] & 0xff;
+				s += (char) ((c & 0x1f) << 6 | (c2 & 0x3f));
+			} else if ((c & 0xf0) == 0xe0){
+				int c2 = ba[idx++] & 0xff, c3 = ba[idx++] & 0xff;
+				s+= (char) ((c & 0x0f) << 12 | (c2 & 0x3f) << 6 | (c3 & 0x3f));
+			} else if ((c & 0xf8) == 0xf0) {
+				int c2 = ba[idx++] & 0xff, c3 = ba[idx++] & 0xff, c4 = ba[idx++] & 0xff;		
+				int codepoint = (c & 0x07) << 18 | (c2 & 0x3f) << 12 | (c3 & 0x3f) << 6 | (c4 & 0x3f);
+				int high = (codepoint - 0x010000) / 0x400 + 0xd800;
+      			int low = (codepoint - 0x010000) % 0x400 + 0xdc00;
+				s+= (char) high + "" + (char) low; 
+			}
+		}
+		return s;
+	}
+	
+	double log(double base, double x) {
+		return log(base, x, 1e-12);
+	}
+	
+	double log(double base, double x, double e) {
+		double result = 0;
+	    double y = x / base;
+    	while (abs( (int) y - 1) > e) {
+    	  result++;
+    	  y = y / base;
+    	}
+    	return result;
+	}
+	
+	double log2(double a) {
+		return log(2, a);
+	} 
+
+	byte[] strToBytes(String s) {
+		byte[] tmp = new byte[length(s) * 4], r;
+		int pos = 0;
+		
+		for (int i = 0; i < length(s); i ++) {
+			long c = (long) charAt(s, i);
+			
+			final boolean est4b = ( (c & 0xdc00) == 0xd800 || (c & 0xdc00) == 0xdc00);
+			
+			if (c <= 0x7f && !est4b ) { // ASCII CHARS (0x0 -> 0x7f)
+				tmp[pos++] = (byte) c;
+			} else if (c <= 0x7ff && !est4b ) { // 2 bytes UTF-8 (0x80 -> 0x7ff)
+				tmp[pos++] = (byte) ((c >> 6) | 0xc0);
+				tmp[pos++] = (byte) ((c & 0x3f) | 0x80);
+			} else if (c <= 0xffff && !est4b) { // 3 bytes UTF-8 (0x800 -> 0xffff)
+				tmp[pos++] = (byte) ((c >> 12) | 0xe0);
+				tmp[pos++] = (byte) (((c >> 6) & 0x3f) | 0x80);
+				tmp[pos++] = (byte) ((c & 0x3f) | 0x80);
+			} else { // 4 bytes UTF-8 (0x10000 -> 0x1fffff)
+				long codepoint = 0x010000 | (c & 0x03ff) << 10 | (((long) charAt(s, ++i)) & 0x03ff);
+				tmp[pos++] = (byte) ((codepoint >> 18) | 0xf0);
+				tmp[pos++] = (byte) (((codepoint >> 12) & 0x3f) | 0x80);
+				tmp[pos++] = (byte) (((codepoint >> 6) & 0x3f) | 0x80);
+				tmp[pos++] = (byte) ((codepoint & 0x3f) | 0x80);				
+			}
+		}
+		r = new byte[pos];
+		for (int i = 0; i < pos; i ++) {
+			r[i] = tmp[i];
+		}
+		return r;
+	}
+	
+	int floor(double a) {
+		if (a >= 0.0) {
+			return (int) a;
+		} else {
+			int b = (int)a;
+			return (int) (a==b ? b : b-1);
+		}
+	}
+		
+	int max(int a, int b) {
+		return (a > b) ? a : b;
+	}
+	
+	
+	
+	byte[] md5(byte[] message) {
+		final int INIT_A = 0x67452301, INIT_B = (int)0xEFCDAB89L, INIT_C = (int)0x98BADCFEL, INIT_D = 0x10325476;
+		final int[] SHIFT_AMTS = {
+			7, 12, 17, 22,
+			5,  9, 14, 20,
+			4, 11, 16, 23,
+			6, 10, 15, 21
+		};
+ 		final int[] TABLE_T = { 0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee, 0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
+			0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be, 0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
+			0xf61e2562, 0xc040b340, 0x265e5a51, 0xe9b6c7aa, 0xd62f105d, 0x02441453, 0xd8a1e681, 0xe7d3fbc8,
+			0x21e1cde6, 0xc33707d6, 0xf4d50d87, 0x455a14ed, 0xa9e3e905, 0xfcefa3f8, 0x676f02d9, 0x8d2a4c8a,
+			0xfffa3942, 0x8771f681, 0x6d9d6122, 0xfde5380c, 0xa4beea44, 0x4bdecfa9, 0xf6bb4b60, 0xbebfbc70,
+			0x289b7ec6, 0xeaa127fa, 0xd4ef3085, 0x04881d05, 0xd9d4d039, 0xe6db99e5, 0x1fa27cf8, 0xc4ac5665,
+			0xf4292244, 0x432aff97, 0xab9423a7, 0xfc93a039, 0x655b59c3, 0x8f0ccc92, 0xffeff47d, 0x85845dd1,
+			0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1, 0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391 };
+
+		int messageLenBytes = length(message);
+		int numBlocks = ((messageLenBytes + 8) >>> 6) + 1;
+		int totalLen = numBlocks << 6;
+		byte[] paddingBytes = new byte[totalLen - messageLenBytes];
+		paddingBytes[0] = (byte)0x80;
+
+		long messageLenBits = (long)messageLenBytes << 3;
+		for (int i = 0; i < 8; i++) {
+			paddingBytes[length(paddingBytes) - 8 + i] = (byte)messageLenBits;
+			messageLenBits >>>= 8;
+		}
+
+		int a = INIT_A;
+		int b = INIT_B;
+		int c = INIT_C;
+		int d = INIT_D;
+		int[] buffer = new int[16];
+		for (int i = 0; i < numBlocks; i ++) {
+			int index = i << 6;
+			for (int j = 0; j < 64; j++, index++) {
+				buffer[j >>> 2] = ((int)((index < messageLenBytes) ? message[index] : paddingBytes[index - messageLenBytes]) << 24) | (buffer[j >>> 2] >>> 8);
+			}
+			int originalA = a;
+			int originalB = b;
+			int originalC = c;
+			int originalD = d;
+			for (int j = 0; j < 64; j++) {
+				int div16 = j >>> 4;
+				int f = 0;
+				int bufferIndex = j;
+				switch (div16) {
+					case 0:
+						f = (b & c) | (~b & d);
+						break;
+					case 1:
+						f = (b & d) | (c & ~d);
+						bufferIndex = (bufferIndex * 5 + 1) & 0x0F;
+						break;
+					case 2:
+						f = b ^ c ^ d;
+						bufferIndex = (bufferIndex * 3 + 5) & 0x0F;
+						break;
+					case 3:
+						f = c ^ (b | ~d);
+						bufferIndex = (bufferIndex * 7) & 0x0F;
+						break;
+				}
+				int temp = b + rotateLeft(a + f + buffer[bufferIndex] + TABLE_T[j], SHIFT_AMTS[(div16 << 2) | (j & 3)]);
+				a = d;
+				d = c;
+				c = b;
+				b = temp;
+			}
+		  
+			a += originalA;
+			b += originalB;
+			c += originalC;
+			d += originalD;
+		}
+
+		byte[] md5 = new byte[16];
+		int count = 0;
+		for (int i = 0; i < 4; i++) {
+		  int n = (i == 0) ? a : ((i == 1) ? b : ((i == 2) ? c : d));
+			for (int j = 0; j < 4; j++) {
+				md5[count++] = (byte)n;
+				n >>>= 8;
+			}
+		}
+		return md5;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

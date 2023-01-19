@@ -1,0 +1,12 @@
+Question;Carte;NombreDeRéponses;NombreDeBonneRéponses;reponse1;reponse2;reponse3
+Quelle est la capitale de l'Egypte ?;/cartes/geo/carte-pyramide;3;1;Le Caire;Alexandrie;Assouan
+Quelle est la capitale de la France ?;/cartes/geo/carte-france;3;1;Paris;Marseille;Lille
+Quelle est la capitale de l’Italie ?;/cartes/geo/carte-italie;3;1;Rome;Venise;Milan
+Quelle est la capitale de l’Espagne ?;/cartes/geo/carte-espagne;3;1;Madrid;Barcelone;Valence
+Quelle est la capitale de l’Allemagne ?;/cartes/geo/carte-allemagne;3;1;Berlin;Munich;Hambourg
+Quelle est la capitale du Royaume-Uni ?;/cartes/geo/carte-angleterre;3;1;Londres;Birmingha;Manchester
+Quel est le plus long fleuve français ?;/cartes/geo/carte-mapfrance;3;1;La Loire;La Seine;La Garonne
+Quelle est l'altitude en mètre du mont Everest ?;/cartes/geo/carte-montagne;3;1;8848;6484;10848
+Quel est le plus grand océan du monde ?;/cartes/geo/carte-ocean;3;1;Le Pacifique;L'Atlantique;La Méditerranée
+Quel est le plus grand pays du monde ?;/cartes/geo/carte-monde;3;1;La Russie;La Chine;Les Etats-Unis
+Quelle est la plus grande chaîne de montagne de France ?;/cartes/geo/carte-montagnefrance;3;1;Les Alpes;Les Pyrénées;Le Massif Central
